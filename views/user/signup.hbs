@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+   <div class="center">
+    <h2 class="text-center mt-5">Create new account</h2>
+    <form action="/signup" method="post"></form>
+    <form action="/signupaction" method="post">
+    <div class="txt_field">
+        <input type="text" id="name"name="name" value="" required>
+        <span></span>
+        <label>Name</label>
+    </div>
+    <div class="txt_field">
+        <input type="text" id="name" name="name" value="" required>
+        <span></span>
+        <label>Email address</label>
+       
+    </div>
+    <div class="txt_field">
+        <input type="password" id="password"name="password" value="" required>
+        <span></span>
+        <label>Password</label>
+    </div>
+    <div class="pass"></div>
+    <a href="/signupaction"></a>
+    <input type="submit" value="Login">
+    <div class="signup_link">
+      <a href="/login">Already have an account?</a>
+ </div>
+</form>
+</div>    
+</body>
+</html>
