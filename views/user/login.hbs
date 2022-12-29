@@ -10,9 +10,13 @@
 <body>
    <div class="center">
     <h1>Login</h1>
+    <form action="/login" method="post">
+    {{#if loginErr}}
+            <p class="error">{{loginErr}}</p>
+    {{/if}}
     <form action="/signupaction" method="post">
     <div class="txt_field">
-        <input type="text" id="name" name="name" value="" required>
+        <input type="text" id="email" name="email" value="" required>
         <span></span>
         <label>Email address</label>
        
@@ -30,6 +34,7 @@
     <div class="signup_link">
     <a href="/signup">Signup</a>
  </div>
+</form>
 </form>
 </div>    
 </body>

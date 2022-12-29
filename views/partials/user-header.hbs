@@ -11,19 +11,29 @@
         <a class="nav-link" href="/">Products <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Cart</a>
+        <a class="nav-link" href="/cart">Cart</a>
       </li>
+      {{#if user}}
        <li class="nav-item">
         <a class="nav-link" href="#">Orders</a>
       </li>
+      {{/if}}
        </ul>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Account
+          {{#if user}}
+             {{user.name}}
+             {{else}}
+              Account
+          {{/if}}
+      
         </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/login">Login</a>
-         
+       {{#if user}}
+              <a class="dropdown-item" href="/logout">Logout</a>
+             {{else}}
+             <a class="dropdown-item" href="/login">Login</a>
+          {{/if}}
         </div>
       </li>
   </div>
