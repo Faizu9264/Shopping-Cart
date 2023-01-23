@@ -13,6 +13,12 @@ var fileUpload=require('express-fileupload')
 var db=require('./config/connection')
 var session=require('express-session')
 // view engine setup
+app.use(session({
+  secret: 'your secret here',
+  resave: true,  // add this line
+  saveUninitialized: true  // add this line
+}));
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/'}))

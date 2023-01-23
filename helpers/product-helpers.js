@@ -1,8 +1,6 @@
 var db=require('../config/connection')
 var collection=require('../config/collections');
-const { ObjectID } = require('bson');
-const { response } = require('../app');
-var objectId=require('mongodb').ObjectID
+var objectId = require("mongodb").ObjectId;
 module.exports={
     addProduct:(product,callback)=>{
         console.log(product);

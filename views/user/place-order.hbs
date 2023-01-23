@@ -1,0 +1,124 @@
+<section>
+    <div class="container mt-5">
+     <form action="" id="checkout-form"  method="post">
+        <div class="row">
+           <div class="col-md-6">
+              <h2>Enter Delivry Details</h2><br>
+              <div>
+                <label for="">Address</label>
+                <input class="form-control" type="text" id="address" name="address">
+                <label for="">Pincode</label>
+                <input class="form-control" type="text" id="pincode" name="pincode">
+                <label for="">Mobile</label>
+                <input class="form-control" type="text" id="mobile" name="mobile"> 
+                <input type="text" name="userId" id="" value="{{user._id}}"hidden>
+              </div>
+           </div>
+           <div class="col-md-4">
+            <div class="container mt-5 ml-5 checkout">
+              <h5>Total Amount : Rs.{{total}}</h5>
+              <hr>
+              <div class="payment">
+                <p>Payment method</p>
+                <label class="radio-line">
+                <input type="radio" name="payment-method" value="COD"checked>COD
+                </label>
+                <label class="radio-inline mt-2">
+                     <input type="radio" name="payment-method" value="ONLINE">Online payment
+                </label>
+                <button class="btn btn-primary float-right" type="submit">Checkout</button>
+              </div>
+           </div>
+        </div>
+        </div>
+     </form>
+    </div>
+</section>
+<script>
+    $("#checkout-form").submit((e)=>{
+        e.preventDefault()
+        $.ajax({
+            url:'/place-order',
+            method:'post',
+            data:$('#checkout-form').serialize(),
+            success:(response)=>{
+                alert(response)
+                if(response.codSuccess){
+                    location.href='/order-success'
+                }else{
+                    paypalPayment(response,res)
+                }
+            }
+        })
+    })
+    function paypalPayment(order,res) {
+  let payment = {
+    "intent": "sale",
+    "payer": {
+      "payment_method": "paypal"
+    },
+    "redirect_urls": {
+      "return_url": `http://localhost:3000/process?orderId=${order.orderId}`,
+      "cancel_url": "http://localhost:3000/cancel"
+    },
+    "transactions": [{
+      "item_list": {
+        "items": [{
+          "name": "Order Payment",
+          "sku": "001",
+          "price": order.total,
+          "currency": "USD",
+          "quantity": 1
+        }]
+      },
+      "amount": {
+        "currency": "USD",
+        "total": order.total
+      },
+      "description": "Payment for Order #" + order.orderId
+    }]
+  };
+
+  paypal.payment.create(payment, function (error, payment) {
+    if (error) {
+      console.log(error);
+    } else {
+      for (let i = 0; i < payment.links.length; i++) {
+        if (payment.links[i].rel === 'approval_url') {
+          // redirect user to the PayPal page
+          res.redirect(payment.links[i].href);
+        }
+      }
+    }
+  });
+}
+function verifyPayment(payment,order){
+    $.ajax({
+            url:'/verify-payment',
+            data:{
+                payment,
+                order
+            },
+            method:'post'
+        })
+
+}
+</script>
+<style>
+    input[type=radio]{
+        width: 20px;
+        height: 20px;
+    }
+    label.radio-inline{
+        display: flex;
+        align-items: center;
+    }
+    .checkout{
+        border: 1px;
+        border-radius: 3px;
+        padding: 30px;
+    }
+    .payment{
+        padding-bottom: 16px;
+    }
+</style>
