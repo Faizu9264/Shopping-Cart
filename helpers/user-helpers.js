@@ -2,13 +2,12 @@ var db=require('../config/connection')
 var collection=require('../config/collections')
 const bcrypt=require('bcrypt')
 var objectId=require('mongodb').ObjectId
-
-const paypal = require('paypal-rest-sdk');
-paypal.configure({
-    'mode': 'sandbox', //sandbox or live
-    'client_id': 'ARCDnTM8nUGJsE38QPkHKAiDYgniICuVINrZ1NCQ3nFBtnxTXfrGpE58tH4u7Dc-A4Se08wTtMnHPdRN',
-    'client_secret': 'EJsJL8JZK5bOX1exM8rCVGHp0U7wXp_04Ku9Jll_ZKQ1FlBh2Xol8QGjOw7vZf9K6fH8JzsAQJ1YGk_t'
-  });
+// const paypal = require('paypal-rest-sdk');
+// paypal.configure({
+//     'mode': 'sandbox', //sandbox or live
+//     'client_id': 'Af2ry10z7gTZhF98Yafun34l8IQpNC-XvoFjEZPpRE7-iGCkHELvKs36NhuFCBcuCy_8ve0PQgBtYIqV',
+//     'client_secret': 'ENRxKBasjO8Z7sWTubL4JBOm_Z0oT_0CoIhHWFLK-o9UzE6Dj9rF3IsUVkNoYYbN1T-KeXuSMO37ouW3'
+//   });
 
 module.exports={
     doSignup:(userData)=>{
@@ -159,6 +158,7 @@ module.exports={
     getTotalAmount:(userId)=>{
         console.log(userId);
         return new Promise(async(resolve,reject)=>{
+            
             let total=await db.get().collection(collection.CART_COLLECTION).aggregate([
                 {
                     $match:{user:objectId(userId)}
@@ -223,6 +223,7 @@ module.exports={
       })
   })
     },
+
     getCartProductList:(userId)=>{
         return new Promise(async(resolve,reject)=>{
             let cart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userId)})
@@ -271,46 +272,7 @@ module.exports={
             resolve(orderItems)
         })
     },
-    generatePaypal: (orderId, total) => {
-        return new Promise((resolve, reject) => {
-            let payment = {
-                "intent": "sale",
-                "payer": {
-                    "payment_method": "paypal"
-                },
-                "redirect_urls": {
-                    "return_url": `http://localhost:3000/process?orderId=${orderId}`,
-                    "cancel_url": "http://localhost:3000/cancel"
-                },
-                "transactions": [{
-                    "item_list": {
-                        "items": [{
-                            "name": "Order Payment",
-                            "sku": "001",
-                            "price": total,
-                            "currency": "USD",
-                            "quantity": 1
-                        }]
-                    },
-                    "amount": {
-                        "currency": "USD",
-                        "total": total
-                    },
-                    "description": "Payment for Order #" + orderId
-                }]
-            };
-            paypal.payment.create(payment, function (error, payment) {
-                if (error) {
-                    reject(error);
-                } else {
-                    payment.links.forEach(function(link) {
-                      if (link.rel === 'approval_url') {
-                        resolve({status: true, url: link.href});
-                      }
-                    });
-                }
-            });
-        });
-    },
-    
 }
+      
+    
+    

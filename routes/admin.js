@@ -48,10 +48,17 @@ router.post('/edit-product/:id',(req,res)=>{
   let id=req.params.id
   productHelpers.updateProduct(req.params.id,req.body).then(()=>{
     res.redirect('/admin')
-    if(req.files.Image){
+    if(req.files && req.files.Image) {
+      // your existing code here
       let image=req.files.Image
       image.mv('./public/product-images/'+id+'.jpg')
-    }
+  } else {
+      console.log("No image file found in the request.")
+  }
+  
+    // if(req.files.Image){
+      
+    // }
   })
 })
 module.exports = router;
